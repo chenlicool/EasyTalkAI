@@ -1,35 +1,29 @@
-# AGENTS.md (总纲)
+# AGENTS.md
 
-版本号: v1.1
-生效时间: 2026-05-14
-适用对象: 所有 AI 编码 / 重构 / 文档生成行为
+适用于 EasyTalkToAI 项目的 AI 编码规则。
 
-## 1. 适用范围
-本规则适用于 EasyTalkToAI 及其所有子项目/子目录。
+## 强制规则
 
-## 2. 强制规则 (MUST)
-1. 禁止修改已标记为 Protected 的文件或服务，除非获得明确授权。
-2. 所有实质性改动前必须完成"影响面判断"；`MEMORY.md` 可在代码后补写，但必须与本次任务同步提交。
-3. 若规则冲突，以更严格者为准；子规则不得放宽总纲限制。
-4. 新功能必须遵循"原子化拆解"原则（先最小单元，再组合）。
-5. 文档第一语言必须为中文；必要时中文在前英文在后，语义一致。
-6. 不确定信息必须标注"待确认/未知"。
+1. **ES5 兼容**：content.js / popup.js 用 `var` 不用 `const/let`，用 `function` 不用箭头函数。
+2. **提交前必测 5 条核心路径**：Click 捕获 / Cmd+C 仿写 / Shift 多选 / iframe 识别 / Popup 切换。
+3. **消息协议不可改**：action 字段已有定义不得修改，新增可。
+4. **最小补丁**：不重写整段，不改到不需要动的地方。
+5. **文档同步**：改代码必须在 MEMORY.md 记一行。
 
-## 3. 禁止行为 (MUST NOT)
-1. 禁止重写整篇文档，只允许最小补丁。
-2. 未审阅 `ARCHITECTURE.md` 禁止改架构。
-3. 未更新文档而先改代码视为违规。
+## 禁止
 
-## 4. 规则索引
-- AI 灵魂定义 → `SOUL.md`
-- 前端规则 → `.rules/AGENTS_FRONTEND.md`
-- 后端规则 → `.rules/AGENTS_BACKEND.md`
-- 测试规则 → `.rules/AGENTS_TEST.md`
-- 文档规则 → `.rules/AGENTS_DOCS.md`
+- 禁止硬编码颜色值（已定义 CSS 变量除外）
+- 禁止在 content.js 里用 ES6+ 语法
+- 禁止改 manifest.json 的 permissions 结构除非新功能必须
+- 禁止未测就提交
 
-## 5. 强制执行流程 (ENFORCEMENT)
-1. 影响面判断
-2. 必要时先更新规则约束（`ARCHITECTURE.md` / `API.md` / `README.md`）
-3. 执行代码修改
-4. 更新 `MEMORY.md`（记录影响面判断与结果）
-5. 更新 `CHANGELOG.md`
+## 文件职责速览
+
+| 文件 | 职责 | 改它时注意 |
+|------|------|-----------|
+| `content/content.js` | 核心：高亮/捕获/复制/仿写 | 最复杂，改动影响最大 |
+| `content/content.css` | 注入样式 | 必须 `elementsnap-` 前缀 |
+| `utils/selector.js` | 选择器引擎 | 独立模块，不依赖 content |
+| `background/service-worker.js` | 快捷键/广播 | Service Worker 非持久 |
+| `popup/popup.js` | UI 控制 | 通过 Service Worker 中转消息 |
+| `manifest.json` | 扩展声明 | Protected — 只加不删 |

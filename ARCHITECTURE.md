@@ -1,83 +1,132 @@
-# EasyTalkToAI 技术架构与实现文档
+# EasyTalkToAI 架构文档
 
-## 1. 项目概述
-EasyTalkToAI 是一个 Chrome 浏览器扩展（Manifest V3），让用户通过悬停+点击网页元素，一键生成 AI 可理解的结构化描述。支持单元素识别、Shift 多选、Cmd+C 仿写规格书三种模式，覆盖 iframe 内元素。
+## 1. 整体数据流
 
-## 2. 目录结构
-```
-EasyTalkToAI/
-├── manifest.json              # 扩展声明（权限/脚本/图标）
-├── background/
-│   └── service-worker.js      # 后台服务：快捷键监听、多 frame 广播
-├── popup/
-│   ├── popup.html             # 弹出窗口 UI
-│   ├── popup.css              # 弹出窗口样式（深色主题）
-│   └── popup.js               # 弹出窗口逻辑（模式切换/状态同步）
-├── content/
-│   ├── content.js             # 核心注入脚本：高亮/捕获/复制/仿写
-│   └── content.css            # 注入样式：浮层/tooltip/toast/多选 badge
-├── utils/
-│   └── selector.js            # 智能 CSS 选择器引擎
-├── icons/                     # 扩展图标（16/48/128 + active 态）
-├── .rules/                    # AI 编码规范（前端/后端/文档/测试）
-├── WORKFLOWS/                 # 初始化与同步流程
-├── AGENTS.md                  # AI 协作总纲
-├── SOUL.md                    # AI 行为边界
-├── STACK.md                   # 技术栈声明
-├── ARCHITECTURE.md            # 本文档
-├── API.md                     # Chrome Extension API 使用说明
-├── CHANGELOG.md               # 版本变更记录
-├── MEMORY.md                  # 项目记忆（时间倒序）
-└── README.md                  # 项目说明
+```mermaid
+graph TD
+    A[用户操作] --> B{触发方式}
+    B -->|点击 Popup 按钮| C[Popup 弹出]
+    B -->|Cmd+Shift+E 快捷键| D[Service Worker]
+    C --> E[点击 Start Picking]
+    D --> E
+    E --> F[Content Script 激活]
+    F --> G[iframe 检测 → 广播所有 frame]
+    G --> H[mousemove → 蓝色高亮 + Tooltip]
+    H --> I{用户操作}
+    I -->|Click| J[元素识别模式 → 复制]
+    I -->|Cmd+C| K[仿写模式 → 复制]
+    I -->|Shift+Click| L[多选模式 → Enter 批量复制]
+    I -->|Esc| M[退出]
 ```
 
-## 3. 技术栈
-- **运行时**: Chrome Extension Manifest V3
-- **语言**: JavaScript (ES5 兼容，无编译)
-- **样式**: 原生 CSS（注入页面 + popup 深色主题）
-- **存储**: chrome.storage.local（输出格式偏好）
-- **权限**: activeTab, scripting, storage, clipboardWrite, webNavigation
+## 2. 三种操作模式
 
-## 4. 核心流程
-
-### 4.1 元素识别模式（Click）
-```
-用户 Cmd+Shift+E → Service Worker → 广播 all frames → content.js 激活
-→ mousemove 蓝色高亮 + tooltip
-→ Click → ElementSnapSelector.generate() → formatOutput() → copyToClipboard
-```
-
-### 4.2 仿写模式（Cmd+C）
-```
-激活后 hover 元素 → Cmd+C
-→ extractVisualSpec() + extractStateSpec() + buildStructureSkeleton()
-  + extractContextSpec() + extractKeyframes() + detectAnimationLib()
-→ buildReplicatePrompt() → copyToClipboard
-```
-
-### 4.3 多选模式（Shift+Click）
-```
-Shift+Click → addSelection() → 彩色 overlay + 编号 badge + X 按钮
-→ Shift+Click 再次 → removeSelection()
-→ Enter → batchCopy()
+```mermaid
+graph LR
+    subgraph 识别模式
+        A1[Hover 元素] --> A2[Click]
+        A2 --> A3[提取选择器+属性]
+        A3 --> A4[复制到剪贴板 ✅]
+    end
+    
+    subgraph 仿写模式
+        B1[Hover 元素] --> B2[Cmd+C]
+        B2 --> B3[提取视觉+动画+结构]
+        B3 --> B4[生成设计规格书 ✅]
+    end
+    
+    subgraph 多选模式
+        C1[Hover 元素] --> C2[Shift+Click]
+        C2 --> C3[彩色高亮+编号角标]
+        C3 --> C4[Enter 批量复制 ✅]
+    end
 ```
 
-### 4.4 iframe 支持
-```
-all_frames: true → content.js 注入所有 frame
-→ Service Worker / Popup 通过 webNavigation.getAllFrames() 广播 toggle
-→ 主 frame 检测到 iframe hover 时隐藏 overlay，iframe 内 overlay 接管
+## 3. 仿写模式的 6 层数据提取
+
+```mermaid
+graph TD
+    A[Cmd+C 触发] --> B[1. Visual Spec]
+    A --> C[2. Interaction States]
+    A --> D[3. CSS Animations]
+    A --> E[4. HTML Structure Skeleton]
+    A --> F[5. Layout Context]
+    A --> G[6. Animation Library Detection]
+    
+    B --> B1["getComputedStyle<br/>30+ 核心属性"]
+    C --> C1["Tailwind hover:* 解析<br/>+ stylesheet :hover 扫描"]
+    D --> D1["@keyframes 规则提取<br/>+ animation-* 属性"]
+    E --> E1["DOM 树精简<br/>SVG → [icon] 占位"]
+    F --> F1["父容器布局<br/>兄弟元素关系"]
+    G --> G1["framer-motion<br/>GSAP / AOS / Lottie"]
+    
+    B1 --> H[buildReplicatePrompt]
+    C1 --> H
+    D1 --> H
+    E1 --> H
+    F1 --> H
+    G1 --> H
+    
+    H --> I["→ 粘贴到 AI 对话 → 生成代码"]
 ```
 
-## 5. 关键设计决策
-- **ES5 不编译**: 避免构建链，直接加载到 Chrome
-- **all_frames 注入**: 解决 iframe 内元素无法识别的问题
-- **execCommand + Clipboard API 双轨复制**: 兼容 Permissions-Policy 限制
-- **智能选择器优先级**: id → data-testid → aria-label → class combo → nth-path
-- **仿写模式离线**: 不依赖 API key，纯 DOM 提取设计规格书
+## 4. 选择器引擎优先级
 
-## 6. 风险与约束
-- Manifest V3 限制: service-worker 非持久，需处理唤醒
-- 跨域 iframe: content script 可注入但无法访问父 frame DOM
-- Permissions-Policy: 某些网站禁用 Clipboard API，需 execCommand 兜底
-- CSS @keyframes 提取: 跨域 stylesheet 无法读取（CORS）
+```mermaid
+graph LR
+    A[DOM 元素] --> B{id 存在且唯一?}
+    B -->|是| C["#submit-btn ✅"]
+    B -->|否| D{data-testid 唯一?}
+    D -->|是| E["[data-testid='submit'] ✅"]
+    D -->|否| F{aria-label 唯一?}
+    F -->|是| G["button[aria-label='提交'] ✅"]
+    F -->|否| H{class 组合唯一?}
+    H -->|是| I["button.btn.primary ✅"]
+    H -->|否| J[nth-child 路径兜底]
+```
+
+## 5. iframe 通信架构
+
+```mermaid
+sequenceDiagram
+    participant P as 父页面 Content Script
+    participant I as iframe Content Script
+    participant SW as Service Worker
+    
+    User->>SW: Cmd+Shift+E
+    SW->>P: toggle (frameId: 0)
+    SW->>I: toggle (frameId: 1,2,...)
+    P->>P: 激活 → 显示 overlay
+    I->>I: 激活 → 显示 overlay
+    
+    User->>I: 鼠标移入 iframe
+    P->>P: 检测到 &lt;iframe&gt; → 隐藏 overlay
+    I->>I: 接管高亮
+    
+    User->>I: Click / Cmd+C
+    I->>I: 捕获元素 → 直接复制 ✅
+```
+
+## 6. 文件职责矩阵
+
+| 文件 | 职责 | 大小 |
+|------|------|------|
+| `content/content.js` | 核心：高亮/捕获/复制/仿写/多选 | ~36KB |
+| `content/content.css` | 注入样式：overlay/tooltip/toast/badge | ~5KB |
+| `utils/selector.js` | 智能 CSS 选择器引擎 | ~5KB |
+| `background/service-worker.js` | 快捷键 + 跨 frame 广播 | ~3KB |
+| `popup/popup.html` | 弹出窗口 UI | ~2KB |
+| `popup/popup.css` | 弹出窗口样式 | ~4KB |
+| `popup/popup.js` | 弹出窗口逻辑 | ~5KB |
+| `manifest.json` | 扩展声明 | ~1KB |
+
+## 7. 关键技术决策
+
+| 决策 | 原因 |
+|------|------|
+| ES5 / 无构建 | 免编译，直接加载到 Chrome |
+| all_frames 注入 | 解决 iframe 内元素无法识别 |
+| execCommand + Clipboard API 双轨 | 兼容 Permissions-Policy 限制 |
+| 选择器优先级链 | id → testid → aria-label → class → path |
+| 仿写离线 | 不依赖 API key，粘贴到任何 AI 都能用 |
+| 空 then/catch 吞 Clipboard 错误 | 避免控制台红线污染 |
