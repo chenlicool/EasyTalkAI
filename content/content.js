@@ -147,10 +147,11 @@
     if (e.shiftKey) {
       // ── Multi-select mode ──────────────────────────
       toggleSelection(el);
+    } else if (selections.length > 0) {
+      // ── Selections exist → click = batch copy ──────
+      batchCopy();
     } else {
       // ── Single capture mode ────────────────────────
-      // If there are selections and user clicks without Shift,
-      // still do single capture (don't clear selections)
       captureSingle(el);
     }
   }
