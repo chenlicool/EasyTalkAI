@@ -1,0 +1,229 @@
+/* ============================================
+   ElementSnap - Popup Styles
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  width: 300px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background: #0f172a;
+  color: #e2e8f0;
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.container {
+  padding: 16px;
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.logo {
+  font-size: 20px;
+}
+
+.header h1 {
+  font-size: 16px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: -0.3px;
+}
+
+/* Toggle Button */
+.toggle-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 10px;
+  position: relative;
+  overflow: hidden;
+}
+
+.toggle-btn:hover {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+}
+
+.toggle-btn:active {
+  transform: scale(0.98);
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+
+.toggle-btn.active:hover {
+  background: linear-gradient(135deg, #f87171, #ef4444);
+  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+}
+
+.btn-icon {
+  font-size: 18px;
+}
+
+.btn-label {
+  flex: 1;
+  text-align: left;
+}
+
+.btn-shortcut {
+  font-size: 11px;
+  opacity: 0.75;
+  background: rgba(255, 255, 255, 0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Status */
+.status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 14px;
+  background: #1e293b;
+}
+
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #64748b;
+  flex-shrink: 0;
+}
+
+.status-active .status-dot {
+  background: #22c55e;
+  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+  animation: pulse-dot 1.5s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.status-text {
+  color: #94a3b8;
+}
+
+/* Section */
+.section {
+  margin-bottom: 14px;
+}
+
+.section-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+/* Format Options */
+.format-options {
+  display: flex;
+  gap: 6px;
+}
+
+.format-opt {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 4px;
+  border-radius: 6px;
+  background: #1e293b;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  color: #94a3b8;
+  transition: all 0.15s ease;
+  border: 1px solid transparent;
+}
+
+.format-opt:hover {
+  color: #e2e8f0;
+  background: #334155;
+}
+
+.format-opt input[type="radio"] {
+  display: none;
+}
+
+.format-opt:has(input:checked) {
+  background: #1d4ed8;
+  color: #fff;
+  border-color: #3b82f6;
+}
+
+/* Tips */
+.tips {
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 12px;
+}
+
+.tip-title {
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #93c5fd;
+}
+
+.tips ol {
+  padding-left: 18px;
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.8;
+}
+
+.tips li strong {
+  color: #e2e8f0;
+}
+
+/* Footer */
+.footer {
+  text-align: center;
+  font-size: 11px;
+  color: #475569;
+}
+
+.footer kbd {
+  display: inline-block;
+  font-family: inherit;
+  font-size: 10px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  background: #334155;
+  color: #94a3b8;
+  border: 1px solid #475569;
+}

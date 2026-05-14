@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EasyTalkToAI</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <span class="logo">💬</span>
+      <h1>EasyTalkToAI</h1>
+    </header>
+
+    <!-- Toggle Button -->
+    <button id="toggleBtn" class="toggle-btn">
+      <span class="btn-icon">🎯</span>
+      <span class="btn-label">Start Picking</span>
+      <span class="btn-shortcut">⌘⇧E</span>
+    </button>
+
+    <!-- Status -->
+    <div id="status" class="status status-inactive">
+      <span class="status-dot"></span>
+      <span class="status-text">Ready — click button or press ⌘⇧E</span>
+    </div>
+
+    <!-- Output Format -->
+    <div class="section">
+      <label class="section-label">Output Format</label>
+      <div class="format-options">
+        <label class="format-opt">
+          <input type="radio" name="format" value="yaml" checked>
+          <span>YAML</span>
+        </label>
+        <label class="format-opt">
+          <input type="radio" name="format" value="json">
+          <span>JSON</span>
+        </label>
+        <label class="format-opt">
+          <input type="radio" name="format" value="markdown">
+          <span>Markdown</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips">
+      <div class="tip-title">How to use</div>
+      <ol>
+        <li>Click <strong>Start Picking</strong></li>
+        <li>Hover any element on the page</li>
+        <li><strong>Click</strong> → capture selector + copy</li>
+        <li><strong>⌘+C</strong> → copy replication spec → AI can rebuild it</li>
+        <li><strong>Shift+Click</strong> → add to multi-select</li>
+        <li>Press <strong>Enter</strong> → batch copy all</li>
+        <li>Paste into AI chat ✨</li>
+      </ol>
+    </div>
+
+    <div class="footer">
+      Press <kbd>Esc</kbd> to exit &nbsp;|&nbsp; Click <kbd>✕</kbd> to remove selection
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
