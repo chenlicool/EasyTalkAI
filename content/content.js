@@ -1,5 +1,5 @@
 /**
- * EasyTalkToAI - Content Script
+ * EasyTalk AI - Content Script
  * Injected into every page. Handles element selection, highlighting,
  * data extraction, and clipboard output.
  *
@@ -297,9 +297,9 @@
     // YAML and Markdown use per-element format
     var parts = [];
     if (format === 'yaml') {
-      parts.push('# EasyTalkToAI (' + sel.length + ' elements)');
+      parts.push('# EasyTalk AI (' + sel.length + ' elements)');
     } else {
-      parts.push('## EasyTalkToAI (' + sel.length + ' elements)');
+      parts.push('## EasyTalk AI (' + sel.length + ' elements)');
     }
     parts.push('');
 

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "EasyTalkToAI",
+  "name": "EasyTalk AI",
   "version": "1.0.0",
   "description": "Click any element → AI-ready description. Cmd+C → full replication spec. Talk to AI effortlessly.",
   "permissions": [
@@ -12,7 +12,7 @@
   ],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_title": "EasyTalkToAI - Pick an element",
+    "default_title": "EasyTalk AI - Pick an element",
     "default_popup": "popup/popup.html",
     "default_icon": {
       "16": "icons/icon16.png",

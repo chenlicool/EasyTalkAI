@@ -1,4 +1,4 @@
-# EasyTalkToAI 架构文档
+# EasyTalk AI 架构文档
 
 ## 1. 整体数据流
 

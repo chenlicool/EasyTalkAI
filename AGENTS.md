@@ -1,6 +1,6 @@
 # AGENTS.md
 
-适用于 EasyTalkToAI 项目的 AI 编码规则。
+适用于 EasyTalk AI 项目的 AI 编码规则。
 
 ## 强制规则
 

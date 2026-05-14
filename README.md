@@ -1,4 +1,4 @@
-# EasyTalkToAI 💬
+# EasyTalk AI 💬
 
 > Click any element → AI understands it. Cmd+C → full component spec.
 
