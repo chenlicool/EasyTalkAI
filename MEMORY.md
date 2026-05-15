@@ -1,3 +1,20 @@
+# 2026-05-15 19:00
+时间：2026-05-15 19:00
+目标：Launch prep — 重写 README + 新增文档 + assets 目录
+改动：
+  - README.md: 重写为产品页，含 Hero/Features/Usage/Privacy/FAQ 章节
+  - PROMOTION.md: 新增，发布计划（渠道/文案/checklist）
+  - STORE_LISTING.md: 新增，Chrome Web Store 文案
+  - PRIVACY.md: 新增，隐私政策
+  - RELEASE_CHECKLIST.md: 新增，上线检查清单
+  - GITHUB_METADATA.md: 新增，仓库描述/topics 建议
+  - assets/: 新建 screenshots/demo/store 目录 + README 说明
+当前：EasyTalk AI v1.0.4，Launch preparation docs 就绪
+禁止动：无
+待办：无
+回滚：无
+约束：ES5 / 向内兼容
+
 # 2026-05-15 17:04
 时间：2026-05-15 17:04
 目标：Popup UI 对齐 Paper 设计稿 — 绿色主题 + SVG 图标 + 胶囊按钮
