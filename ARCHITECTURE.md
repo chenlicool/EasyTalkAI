@@ -89,22 +89,22 @@ graph LR
 
 ```mermaid
 sequenceDiagram
-    participant P as 父页面 Content Script
+    participant P as Parent Content Script
     participant I as iframe Content Script
     participant SW as Service Worker
-    
+
     User->>SW: Cmd+Shift+E
     SW->>P: toggle (frameId: 0)
-    SW->>I: toggle (frameId: 1,2,...)
-    P->>P: 激活 → 显示 overlay
-    I->>I: 激活 → 显示 overlay
-    
-    User->>I: 鼠标移入 iframe
-    P->>P: 检测到 &lt;iframe&gt; → 隐藏 overlay
-    I->>I: 接管高亮
-    
+    SW->>I: toggle (frameId: 1, 2, ...)
+    P->>P: activate overlay
+    I->>I: activate overlay
+
+    User->>I: mouse enters iframe
+    P->>P: detect iframe, hide overlay
+    I->>I: take over highlight
+
     User->>I: Click / Cmd+C
-    I->>I: 捕获元素 → 直接复制 ✅
+    I->>I: capture element, copy
 ```
 
 ## 6. 文件职责矩阵
