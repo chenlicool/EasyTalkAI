@@ -21,10 +21,6 @@
   <img src="https://img.shields.io/badge/license-MIT-141421" alt="MIT">
 </p>
 
-<p align="center">
-  <img src="assets/screenshots/easy-talk-ai-preview.jpg" alt="EasyTalk AI Preview" width="720">
-</p>
-
 ---
 
 **EasyTalk AI** turns any webpage UI element into a structured, AI-readable component spec — CSS selectors, visual properties, layout context, spacing, animations, and more.
@@ -57,6 +53,12 @@ Without a tool like this, you have to:
 - **Design system maintainers** — Extract component specs for documentation
 
 ---
+
+## Preview
+
+<p align="center">
+  <img src="assets/screenshots/easy-talk-ai-preview.jpg" alt="EasyTalk AI Preview" width="720">
+</p>
 
 ## Features
 
