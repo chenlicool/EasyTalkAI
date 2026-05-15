@@ -6,11 +6,11 @@
       <stop offset="1" stop-color="#827D82"/>
     </linearGradient>
     <linearGradient id="fg" x1="64.078" y1="29.45" x2="63.922" y2="99.643" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#95EA5C"/>
+      <stop stop-color="#5C9CEA"/>
       <stop offset="1" stop-color="#B5E932"/>
     </linearGradient>
     <linearGradient id="sprk" x1="101.672" y1="15.698" x2="101.672" y2="41.356" gradientUnits="userSpaceOnUse">
-      <stop stop-color="#95EA5C"/>
+      <stop stop-color="#5C9CEA"/>
       <stop offset="1" stop-color="#B5E932"/>
     </linearGradient>
   </defs>
