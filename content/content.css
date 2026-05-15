@@ -21,8 +21,8 @@
   position: fixed;
   pointer-events: none;
   z-index: 2147483644;
-  border: 2px solid #3b82f6;
-  background: rgba(59, 130, 246, 0.12);
+  border: 2px solid #8BBF2F;
+  background: rgba(139, 191, 47, 0.12);
   border-radius: 0;
   transition: all 0.08s ease-out;
   display: none;
@@ -54,9 +54,9 @@
   position: fixed;
   pointer-events: none;
   z-index: 2147483647;
-  background: #1e293b;
+  background: #262626;
   color: #f1f5f9;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   font-size: 12px;
   line-height: 1.4;
   padding: 6px 10px;
@@ -70,13 +70,13 @@
 }
 
 #elementsnap-tooltip .es-tag {
-  color: #93c5fd;
+  color: #A8EA43;
   font-weight: 600;
   margin-right: 6px;
 }
 
 #elementsnap-tooltip .es-dims {
-  color: #94a3b8;
+  color: #A4A4A4;
   margin-left: 8px;
 }
 
@@ -95,7 +95,7 @@
 #elementsnap-tooltip .es-row-styles {
   margin-top: 5px;
   padding-top: 5px;
-  border-top: 1px solid rgba(148, 163, 184, 0.2);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
   font-size: 11px;
   display: flex;
   flex-direction: column;
@@ -126,7 +126,7 @@
 
 /* Style labels (P/M/B) */
 #elementsnap-tooltip .es-style-label {
-  color: #94a3b8;
+  color: #888888;
   font-size: 10px;
   font-weight: 600;
   margin-right: 1px;
@@ -134,7 +134,7 @@
 }
 
 #elementsnap-tooltip .es-style-val {
-  color: #cbd5e1;
+  color: #A4A4A4;
   font-size: 11px;
 }
 
@@ -147,7 +147,7 @@
 #elementsnap-tooltip.es-frozen {
   pointer-events: auto;
   user-select: text;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(147, 197, 253, 0.4);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(168, 234, 67, 0.4);
 }
 
 /* ════════════════════════════════════════════════════
@@ -158,7 +158,7 @@
   position: fixed;
   pointer-events: none;
   z-index: 2147483645;
-  border: 2.5px solid;
+  border: 2.5px solid #8BBF2F;
   border-radius: 4px;
   transition: all 0.12s ease-out;
 }
