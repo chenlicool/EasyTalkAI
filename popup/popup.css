@@ -46,7 +46,7 @@ body {
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  border: 2px solid #A8EA43;
+  border: 1px solid #A8EA43;
   border-radius: 9999px;
   background: #8BBF2F;
   color: #000000;
@@ -116,7 +116,7 @@ body {
   font-size: 12px;
   margin-bottom: 14px;
   background: #262626;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
 }
 
 .status-dot {
@@ -177,7 +177,7 @@ body {
   font-weight: 500;
   color: #A4A4A4;
   transition: all 0.15s ease;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
   font-family: system-ui, sans-serif;
 }
 
@@ -199,7 +199,7 @@ body {
 /* Tips */
 .tips {
   background: #262626;
-  border: 2px solid #000000;
+  border: 1px solid #000000;
   border-radius: 6px;
   padding: 10px 12px;
   margin-bottom: 12px;
