@@ -1,3 +1,16 @@
+# 2026-05-15 17:04
+时间：2026-05-15 17:04
+目标：Popup UI 对齐 Paper 设计稿 — 绿色主题 + SVG 图标 + 胶囊按钮
+改动：
+  - popup.html: 💬 Logo 替换为 SVG 图标（渐变圆角矩形 + 绿色闪电图案），🎯 替换为 SVG 十字星/停止图标，JS 引用改为 getElementById
+  - popup.css: 全部配色从蓝色系改为暗灰底+绿色主色(#96EA5C)，按钮绿色渐变 180deg，选项改为 9999px 胶囊 pill，弹体外框圆角 20px+黑边，字体统一 system-ui
+  - popup.js: setActiveState 改用 SVG display 切换替代 emoji textContent，引用 iconCrosshair/iconStop 变量
+当前：EasyTalk AI v1.0.4，Popup 视觉对齐 Paper 最终设计稿
+禁止动：无
+待办：无
+回滚：无
+约束：ES5 / 向内兼容
+
 # 2026-05-15 16:21
 时间：2026-05-15 16:21
 目标：Tooltip 多行布局 + 光标跟随定位

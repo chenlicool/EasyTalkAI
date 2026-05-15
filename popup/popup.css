@@ -1,5 +1,6 @@
 /* ============================================
    ElementSnap - Popup Styles
+   Based on Paper final design
    ============================================ */
 
 * {
@@ -10,11 +11,15 @@
 
 body {
   width: 300px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-  background: #0f172a;
-  color: #e2e8f0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: #1C1B1C;
+  color: #F1F5F9;
   font-size: 13px;
   line-height: 1.5;
+  border-radius: 20px;
+  border: 1px solid #000000;
+  outline: 1px solid #0D0D0D;
+  overflow: hidden;
 }
 
 .container {
@@ -29,15 +34,12 @@ body {
   margin-bottom: 14px;
 }
 
-.logo {
-  font-size: 20px;
-}
-
 .header h1 {
   font-size: 16px;
   font-weight: 700;
-  color: #f1f5f9;
+  color: #F1F5F9;
   letter-spacing: -0.3px;
+  font-family: system-ui, sans-serif;
 }
 
 /* Toggle Button */
@@ -45,26 +47,26 @@ body {
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 8px;
   padding: 12px 16px;
-  border: none;
-  border-radius: 10px;
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: #fff;
+  border: 1px solid #000000;
+  border-radius: 12px;
+  background: linear-gradient(180deg, #95EA5C 0%, #6AD03A 100%);
+  color: #000000;
   font-size: 14px;
   font-weight: 600;
+  font-family: system-ui, sans-serif;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
   margin-bottom: 10px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0px 2px 3px rgba(0, 0, 0, 0.2);
 }
 
 .toggle-btn:hover {
-  background: linear-gradient(135deg, #60a5fa, #3b82f6);
   transform: translateY(-1px);
-  box-shadow: 0 4px 16px rgba(59, 130, 246, 0.35);
+  box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.3);
 }
 
 .toggle-btn:active {
@@ -72,29 +74,38 @@ body {
 }
 
 .toggle-btn.active {
-  background: linear-gradient(135deg, #ef4444, #dc2626);
+  background: linear-gradient(180deg, #FF6B6B 0%, #E04848 100%);
 }
 
 .toggle-btn.active:hover {
-  background: linear-gradient(135deg, #f87171, #ef4444);
-  box-shadow: 0 4px 16px rgba(239, 68, 68, 0.35);
+  box-shadow: 0px 3px 6px rgba(239, 68, 68, 0.25);
 }
 
 .btn-icon {
-  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
 }
 
 .btn-label {
   flex: 1;
   text-align: left;
+  font-family: system-ui, sans-serif;
 }
 
 .btn-shortcut {
   font-size: 11px;
   opacity: 0.75;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.1);
+  border: 1px solid #000000;
   padding: 2px 6px;
   border-radius: 4px;
+  color: #000000;
+  font-weight: 600;
+  font-family: system-ui, sans-serif;
 }
 
 /* Status */
@@ -106,20 +117,21 @@ body {
   border-radius: 6px;
   font-size: 12px;
   margin-bottom: 14px;
-  background: #1e293b;
+  background: #262626;
+  border: 1px solid #000000;
 }
 
 .status-dot {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #64748b;
+  background: #888888;
   flex-shrink: 0;
 }
 
 .status-active .status-dot {
-  background: #22c55e;
-  box-shadow: 0 0 6px rgba(34, 197, 94, 0.5);
+  background: #96EA5C;
+  box-shadow: 0 0 6px rgba(150, 234, 92, 0.5);
   animation: pulse-dot 1.5s infinite;
 }
 
@@ -129,7 +141,7 @@ body {
 }
 
 .status-text {
-  color: #94a3b8;
+  color: #A4A4A4;
 }
 
 /* Section */
@@ -143,11 +155,12 @@ body {
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: #64748b;
+  color: #888888;
   margin-bottom: 8px;
+  font-family: system-ui, sans-serif;
 }
 
-/* Format Options */
+/* Format Options - Pill Style */
 .format-options {
   display: flex;
   gap: 6px;
@@ -159,19 +172,19 @@ body {
   align-items: center;
   justify-content: center;
   padding: 8px 4px;
-  border-radius: 6px;
-  background: #1e293b;
+  border-radius: 9999px;
+  background: #262626;
   cursor: pointer;
   font-size: 12px;
   font-weight: 500;
-  color: #94a3b8;
+  color: #A4A4A4;
   transition: all 0.15s ease;
-  border: 1px solid transparent;
+  border: 1px solid #000000;
+  font-family: system-ui, sans-serif;
 }
 
 .format-opt:hover {
-  color: #e2e8f0;
-  background: #334155;
+  background: #333333;
 }
 
 .format-opt input[type="radio"] {
@@ -179,16 +192,17 @@ body {
 }
 
 .format-opt:has(input:checked) {
-  background: #1d4ed8;
-  color: #fff;
-  border-color: #3b82f6;
+  background: #96EA5C;
+  color: #000000;
+  border-color: #96EA5C;
 }
 
 /* Tips */
 .tips {
-  background: #1e293b;
-  border-radius: 8px;
-  padding: 12px;
+  background: #262626;
+  border: 1px solid #000000;
+  border-radius: 6px;
+  padding: 10px 12px;
   margin-bottom: 12px;
 }
 
@@ -196,34 +210,41 @@ body {
   font-size: 12px;
   font-weight: 600;
   margin-bottom: 6px;
-  color: #93c5fd;
+  color: #FFFFFF;
+  font-family: system-ui, sans-serif;
 }
 
 .tips ol {
   padding-left: 18px;
   font-size: 12px;
-  color: #94a3b8;
+  color: #A4A4A4;
   line-height: 1.8;
 }
 
+.tips li {
+  color: #A4A4A4;
+}
+
 .tips li strong {
-  color: #e2e8f0;
+  color: #FFFFFF;
+  font-weight: 600;
 }
 
 /* Footer */
 .footer {
   text-align: center;
   font-size: 11px;
-  color: #475569;
+  color: #616161;
+  font-family: system-ui, sans-serif;
 }
 
 .footer kbd {
   display: inline-block;
-  font-family: inherit;
+  font-family: system-ui, sans-serif;
   font-size: 10px;
   padding: 1px 5px;
   border-radius: 3px;
-  background: #334155;
-  color: #94a3b8;
-  border: 1px solid #475569;
+  background: #333333;
+  color: #A4A4A4;
+  border: 1px solid #555555;
 }

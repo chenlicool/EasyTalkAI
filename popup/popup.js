@@ -129,20 +129,25 @@
   });
 
   // ── UI State ───────────────────────────────────────
+  var iconCrosshair = document.getElementById('iconCrosshair');
+  var iconStop = document.getElementById('iconStop');
+
   function setActiveState(active) {
     isActive = active;
     if (active) {
       toggleBtn.classList.add('active');
       toggleBtn.querySelector('.btn-label').textContent = 'Stop Picking';
-      toggleBtn.querySelector('.btn-icon').textContent = '⏹';
+      iconCrosshair.style.display = 'none';
+      iconStop.style.display = 'inline-block';
       statusEl.className = 'status status-active';
-      statusEl.querySelector('.status-text').textContent = 'Active — hover and click an element';
+      document.getElementById('statusText').textContent = 'Active — hover and click an element';
     } else {
       toggleBtn.classList.remove('active');
       toggleBtn.querySelector('.btn-label').textContent = 'Start Picking';
-      toggleBtn.querySelector('.btn-icon').textContent = '🎯';
+      iconCrosshair.style.display = 'inline-block';
+      iconStop.style.display = 'none';
       statusEl.className = 'status status-inactive';
-      statusEl.querySelector('.status-text').textContent = 'Ready — click button or press ⌘⇧E';
+      document.getElementById('statusText').textContent = 'Ready — click button or press ⌘⇧E';
     }
   }
 
