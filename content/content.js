@@ -23,8 +23,8 @@
   // Multi-select state
   var selections = [];        // [{ el, data, overlayEl, badgeEl, closeEl }]
   var selectionColors = [
+    '#8BBF2F', // green (accent)
     '#3b82f6', // blue
-    '#22c55e', // green
     '#a855f7', // purple
     '#f97316', // orange
     '#ec4899', // pink
