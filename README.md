@@ -1,4 +1,8 @@
-# EasyTalk AI 💬
+# EasyTalk AI
+
+<p align="center">
+  <img src="icons/logo.svg" width="80" height="80" alt="EasyTalk AI Icon">
+</p>
 
 > Click any element → AI understands it. Cmd+C → full component spec.
 
