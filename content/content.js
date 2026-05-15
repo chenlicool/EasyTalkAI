@@ -11,11 +11,14 @@
 
   // ── State ──────────────────────────────────────────
   var active = false;
-  var overlay = null;       // hover highlight (blue)
-  var tooltip = null;       // hover label
-  var toast = null;         // copy notification
+  var overlay = null;         // hover highlight (blue) — content box
+  var overlayPadding = null;  // box model: padding layer (green)
+  var overlayMargin = null;   // box model: margin layer (purple)
+  var tooltip = null;         // hover label
+  var toast = null;           // copy notification
   var currentTarget = null;
   var outputFormat = 'yaml';
+  var tooltipFrozen = false;  // Alt key freezes tooltip for text selection
 
   // Multi-select state
   var selections = [];        // [{ el, data, overlayEl, badgeEl, closeEl }]
@@ -33,6 +36,14 @@
     if (!overlay) {
       overlay = createDiv('elementsnap-overlay');
       document.body.appendChild(overlay);
+    }
+    if (!overlayPadding) {
+      overlayPadding = createDiv('elementsnap-bm-padding');
+      document.body.appendChild(overlayPadding);
+    }
+    if (!overlayMargin) {
+      overlayMargin = createDiv('elementsnap-bm-margin');
+      document.body.appendChild(overlayMargin);
     }
     if (!tooltip) {
       tooltip = createDiv('elementsnap-tooltip');
@@ -59,7 +70,10 @@
     document.addEventListener('mousemove', onMouseMove, true);
     document.addEventListener('click', onClick, true);
     document.addEventListener('keydown', onKeyDown, true);
+    document.addEventListener('keyup', onKeyUp, true);
     overlay.style.display = 'block';
+    overlayPadding.style.display = 'block';
+    overlayMargin.style.display = 'block';
     tooltip.style.display = 'block';
     loadSettings();
   }
@@ -71,7 +85,10 @@
     document.removeEventListener('mousemove', onMouseMove, true);
     document.removeEventListener('click', onClick, true);
     document.removeEventListener('keydown', onKeyDown, true);
+    document.removeEventListener('keyup', onKeyUp, true);
     overlay.style.display = 'none';
+    overlayPadding.style.display = 'none';
+    overlayMargin.style.display = 'none';
     tooltip.style.display = 'none';
     currentTarget = null;
     clearSelections();
@@ -88,6 +105,24 @@
   // ── Mouse Move ─────────────────────────────────────
   function onMouseMove(e) {
     if (!active) return;
+
+    // Alt/Option key held → freeze tooltip for text selection
+    if (e.altKey) {
+      if (!tooltipFrozen && currentTarget) {
+        tooltipFrozen = true;
+        tooltip.classList.add('es-frozen');
+        overlay.classList.add('es-frozen');
+        overlayPadding.classList.add('es-frozen');
+        overlayMargin.classList.add('es-frozen');
+      }
+      return;
+    }
+
+    // Alt/Option released → unfreeze
+    if (tooltipFrozen) {
+      unfreezeTooltip();
+    }
+
     var el = e.target;
     if (isOurElement(el)) return;
 
@@ -96,33 +131,107 @@
     if (el.tagName === 'IFRAME') {
       currentTarget = el;
       overlay.style.display = 'none';
+      overlayPadding.style.display = 'none';
+      overlayMargin.style.display = 'none';
       tooltip.style.display = 'none';
       return;
     }
 
     currentTarget = el;
     overlay.style.display = 'block';
+    overlayPadding.style.display = 'block';
+    overlayMargin.style.display = 'block';
     tooltip.style.display = 'block';
     updateHighlight(el);
   }
 
   function updateHighlight(el) {
     var rect = el.getBoundingClientRect();
-    overlay.style.left = rect.left + 'px';
-    overlay.style.top = rect.top + 'px';
-    overlay.style.width = rect.width + 'px';
-    overlay.style.height = rect.height + 'px';
+    var cs = getComputedStyle(el);
 
+    // Parse box model values
+    var pT = parseFloat(cs.paddingTop) || 0;
+    var pR = parseFloat(cs.paddingRight) || 0;
+    var pB = parseFloat(cs.paddingBottom) || 0;
+    var pL = parseFloat(cs.paddingLeft) || 0;
+    var bT = parseFloat(cs.borderTopWidth) || 0;
+    var bR = parseFloat(cs.borderRightWidth) || 0;
+    var bB = parseFloat(cs.borderBottomWidth) || 0;
+    var bL = parseFloat(cs.borderLeftWidth) || 0;
+    var mT = parseFloat(cs.marginTop) || 0;
+    var mR = parseFloat(cs.marginRight) || 0;
+    var mB = parseFloat(cs.marginBottom) || 0;
+    var mL = parseFloat(cs.marginLeft) || 0;
+
+    // ── Box Model Overlays ──────────────────────────
+    // Content overlay: rect minus border and padding
+    overlay.style.left   = (rect.left + bL + pL) + 'px';
+    overlay.style.top    = (rect.top + bT + pT) + 'px';
+    overlay.style.width  = Math.max(0, rect.width - bL - bR - pL - pR) + 'px';
+    overlay.style.height = Math.max(0, rect.height - bT - bB - pT - pB) + 'px';
+
+    // Padding overlay: thin outline at border box edge
+    setBoxOverlay(overlayPadding, rect.left, rect.top, rect.width, rect.height);
+
+    // Margin overlay: gradient frame fill (α=0.5)
+    setBoxOverlay(overlayMargin, rect.left - mL, rect.top - mT,
+      Math.max(0, rect.width + mL + mR), Math.max(0, rect.height + mT + mB));
+    applyFrameGradient(overlayMargin, mT, mR, mB, mL, 'rgba(168, 85, 247, 0.5)');
+
+    // ── Tooltip ─────────────────────────────────────
     var tag = el.tagName.toLowerCase();
     var dims = Math.round(rect.width) + '\u00d7' + Math.round(rect.height);
     var text = el.textContent ? el.textContent.trim().slice(0, 40) : '';
     if (text.length >= 40) text += '\u2026';
 
-    tooltip.innerHTML =
-      '<span class="es-tag">&lt;' + tag + '&gt;</span>' +
-      escapeHtml(text || '(empty)') +
-      '<span class="es-dims">' + dims + '</span>';
+    // Style values for second row
+    var textColor = cs.color;
+    var fontSize = cs.fontSize;
+    var fontWeight = cs.fontWeight;
+    var fontFamily = cs.fontFamily.split(',')[0].replace(/["']/g, '').trim();
+    var bgColor = cs.backgroundColor;
+    var hasBg = bgColor && bgColor !== 'rgba(0, 0, 0, 0)' && bgColor !== 'transparent';
+    var bdWidth = bT; // use top border as representative
+    var bdStyle = cs.borderTopStyle;
+    var bdColor = cs.borderTopColor;
+    var hasBorder = bdWidth > 0 && bdStyle !== 'none';
 
+    // Spacing shorthands
+    var padShort = boxShorthand(pT, pR, pB, pL);
+    var marShort = boxShorthand(mT, mR, mB, mL);
+
+    // Build tooltip HTML (two rows)
+    var html = '';
+    html += '<div class="es-row es-row-main">';
+    html += '<span class="es-tag">&lt;' + tag + '&gt;</span>';
+    html += escapeHtml(text || '(empty)');
+    html += '<span class="es-dims">' + dims + '</span>';
+    html += '</div>';
+
+    html += '<div class="es-row es-row-styles">';
+    // Text color swatch + typography
+    html += '<span class="es-swatch" style="background-color:' + textColor + '"></span>';
+    html += '<span class="es-style-val">' + fontSize + '/' + fontWeight + ' ' + escapeHtml(fontFamily) + '</span>';
+    // Background swatch (only if visible)
+    if (hasBg) {
+      html += '<span class="es-swatch es-swatch-bg" style="background-color:' + bgColor + '"></span>';
+    }
+    // Border info (only if present)
+    if (hasBorder) {
+      html += '<span class="es-style-label">B</span>';
+      html += '<span class="es-style-val">' + bdWidth + 'px ' + bdColor + '</span>';
+    }
+    // Padding
+    html += '<span class="es-style-label">P</span>';
+    html += '<span class="es-style-val">' + padShort + '</span>';
+    // Margin
+    html += '<span class="es-style-label">M</span>';
+    html += '<span class="es-style-val">' + marShort + '</span>';
+    html += '</div>';
+
+    tooltip.innerHTML = html;
+
+    // Position tooltip
     var tipLeft = rect.left;
     var tipTop = rect.top - tooltip.offsetHeight - 6;
     if (tipTop < 4) tipTop = rect.bottom + 6;
@@ -133,6 +242,40 @@
 
     tooltip.style.left = tipLeft + 'px';
     tooltip.style.top = tipTop + 'px';
+  }
+
+  /** Helper: set position/dimensions on a box model overlay div */
+  function setBoxOverlay(div, left, top, width, height) {
+    div.style.left   = left + 'px';
+    div.style.top    = top + 'px';
+    div.style.width  = width + 'px';
+    div.style.height = height + 'px';
+  }
+
+  /**
+   * Draw a frame fill: 4 linear-gradients paint top/right/bottom/left
+   * strips. Center is transparent — inner layers show through.
+   */
+  function applyFrameGradient(div, t, r, b, l, color) {
+    if (t === 0 && r === 0 && b === 0 && l === 0) {
+      div.style.backgroundImage = 'none';
+      return;
+    }
+    div.style.backgroundImage = [
+      'linear-gradient(to bottom, ' + color + ', ' + color + ')',
+      'linear-gradient(to bottom, ' + color + ', ' + color + ')',
+      'linear-gradient(to left,   ' + color + ', ' + color + ')',
+      'linear-gradient(to left,   ' + color + ', ' + color + ')'
+    ].join(', ');
+    div.style.backgroundSize = '100% ' + t + 'px, 100% ' + b + 'px, ' + r + 'px 100%, ' + l + 'px 100%';
+    div.style.backgroundPosition = 'top, bottom, right, left';
+  }
+
+  /** Helper: compute shorthand for 4-sided spacing values */
+  function boxShorthand(t, r, b, l) {
+    if (t === r && r === b && b === l) return t + 'px';
+    if (t === b && r === l) return t + ' ' + r;
+    return t + ' ' + r + ' ' + b + ' ' + l;
   }
 
   // ── Click → Capture or Multi-Select ────────────────
@@ -548,7 +691,24 @@
       }
     }
 
+    // Alt/Option: freeze tooltip for text selection (primary trigger)
+    if (e.key === 'Alt' && !e.metaKey && !e.ctrlKey) {
+      if (currentTarget && !tooltipFrozen) {
+        tooltipFrozen = true;
+        tooltip.classList.add('es-frozen');
+        overlay.classList.add('es-frozen');
+        overlayPadding.classList.add('es-frozen');
+        overlayMargin.classList.add('es-frozen');
+        e.preventDefault();
+      }
+      return;
+    }
+
     if (e.key === 'Escape') {
+      if (tooltipFrozen) {
+        unfreezeTooltip();
+        return;
+      }
       if (selections.length > 0) {
         clearSelections();
       } else {
@@ -557,6 +717,23 @@
     } else if (e.key === 'Enter' && selections.length > 0) {
       e.preventDefault();
       batchCopy();
+    }
+  }
+
+  function onKeyUp(e) {
+    if (e.key === 'Alt' && tooltipFrozen) {
+      unfreezeTooltip();
+    }
+  }
+
+  function unfreezeTooltip() {
+    tooltipFrozen = false;
+    tooltip.classList.remove('es-frozen');
+    overlay.classList.remove('es-frozen');
+    overlayPadding.classList.remove('es-frozen');
+    overlayMargin.classList.remove('es-frozen');
+    if (currentTarget && !isOurElement(currentTarget)) {
+      updateHighlight(currentTarget);
     }
   }
 

@@ -1,3 +1,25 @@
+# 2026-05-15 10:36
+时间：2026-05-15 10:36
+目标：Box Model Style Inspector — hover 时可视化展示元素样式属性和盒模型
+改动：
+  - content.css: 新增 #elementsnap-bm-margin/padding 三层 box model（content-box + border-width 环形方案：margin 定位 border box + 紫色 dashed 边框向外延伸，padding 定位 content box + 绿色 dashed 边框向外延伸），修改 tooltip 支持双行布局（es-row/es-swatch/es-style-label/es-style-val），content overlay 圆角改 0
+  - content.js: 新增 overlayPadding/overlayMargin 状态变量 + ensureUI/deactivate/activate/onMouseMove iframe 处理同步展示/隐藏 + updateHighlight 重写（getComputedStyle 解析盒模型数值 + 3 层 overlay 定位 + tooltip 双行 HTML 含色块/字体/背景色/边框/P/M 数值）+ setBoxOverlay/boxShorthand 辅助函数 + freeze/unfreeze 覆盖 box model overlay
+当前：EasyTalk AI v1.0.2，Box Model Style Inspector 功能就绪
+禁止动：无
+待办：无
+回滚：无
+约束：ES5 / 向内兼容
+
+# 2026-05-14 21:48
+时间：2026-05-14 21:48
+目标：Tooltip 支持按住 Alt 冻结并选中文字
+改动：content.css 新增 .es-frozen 类（pointer-events:auto + user-select:text）+ content.js 新增 tooltipFrozen 状态 / onKeyUp 监听 / unfreezeTooltip 函数（共约 25 行）
+当前：EasyTalk AI v1.0.1，Alt 键冻结 tooltip 功能就绪
+禁止动：无
+待办：无
+回滚：无
+约束：ES5 / 向内兼容
+
 # 2026-05-14 14:00
 时间：2026-05-14 14:00
 目标：治理文件精简 + 架构文档重写
