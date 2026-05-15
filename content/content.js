@@ -142,10 +142,10 @@
     overlayPadding.style.display = 'block';
     overlayMargin.style.display = 'block';
     tooltip.style.display = 'block';
-    updateHighlight(el);
+    updateHighlight(el, e);
   }
 
-  function updateHighlight(el) {
+  function updateHighlight(el, e) {
     var rect = el.getBoundingClientRect();
     var cs = getComputedStyle(el);
 
@@ -195,6 +195,8 @@
     var bdStyle = cs.borderTopStyle;
     var bdColor = cs.borderTopColor;
     var hasBorder = bdWidth > 0 && bdStyle !== 'none';
+    var bdRadius = cs.borderRadius;
+    var hasRadius = bdRadius && bdRadius !== '0px';
 
     // Spacing shorthands
     var padShort = boxShorthand(pT, pR, pB, pL);
@@ -208,37 +210,57 @@
     html += '<span class="es-dims">' + dims + '</span>';
     html += '</div>';
 
-    html += '<div class="es-row es-row-styles">';
-    // Text color swatch + typography
-    html += '<span class="es-swatch" style="background-color:' + textColor + '"></span>';
-    html += '<span class="es-style-val">' + fontSize + '/' + fontWeight + ' ' + escapeHtml(fontFamily) + '</span>';
-    // Background swatch (only if visible)
-    if (hasBg) {
-      html += '<span class="es-swatch es-swatch-bg" style="background-color:' + bgColor + '"></span>';
-    }
-    // Border info (only if present)
-    if (hasBorder) {
-      html += '<span class="es-style-label">B</span>';
-      html += '<span class="es-style-val">' + bdWidth + 'px ' + bdColor + '</span>';
-    }
-    // Padding
+    html += '<div class="es-row-styles">';
+    // Row 2: Spacing (Padding + Margin)
+    html += '<div class="es-subrow">';
     html += '<span class="es-style-label">P</span>';
     html += '<span class="es-style-val">' + padShort + '</span>';
-    // Margin
     html += '<span class="es-style-label">M</span>';
     html += '<span class="es-style-val">' + marShort + '</span>';
+    html += '</div>';
+    // Row 3: Dimensions (Width + Height + Border-radius)
+    html += '<div class="es-subrow">';
+    html += '<span class="es-style-label">W</span>';
+    html += '<span class="es-style-val">' + Math.round(rect.width) + 'px</span>';
+    html += '<span class="es-style-label">H</span>';
+    html += '<span class="es-style-val">' + Math.round(rect.height) + 'px</span>';
+    if (hasRadius) {
+      html += '<span class="es-style-label">R</span>';
+      html += '<span class="es-style-val">' + bdRadius + '</span>';
+    }
+    html += '</div>';
+    // Row 4: Border (only if present)
+    if (hasBorder) {
+      html += '<div class="es-subrow">';
+      html += '<span class="es-style-label">B</span>';
+      html += '<span class="es-style-val">' + bdWidth + 'px ' + bdColor + '</span>';
+      html += '</div>';
+    }
+    // Row 5: Colors + Typography
+    html += '<div class="es-subrow">';
+    html += '<span class="es-swatch" style="background-color:' + textColor + '"></span>';
+    html += '<span class="es-style-val">' + rgbToHex(textColor) + '</span>';
+    html += '<span class="es-style-val">' + fontSize + '/' + fontWeight + ' ' + escapeHtml(fontFamily) + '</span>';
+    if (hasBg) {
+      html += '<span class="es-swatch es-swatch-bg" style="background-color:' + bgColor + '"></span>';
+      html += '<span class="es-style-val">' + rgbToHex(bgColor) + '</span>';
+    }
+    html += '</div>';
     html += '</div>';
 
     tooltip.innerHTML = html;
 
-    // Position tooltip
-    var tipLeft = rect.left;
-    var tipTop = rect.top - tooltip.offsetHeight - 6;
-    if (tipTop < 4) tipTop = rect.bottom + 6;
+    // Position tooltip near cursor (or element if no event, e.g. unfreeze)
+    var tipLeft = e ? e.clientX + 12 : rect.left;
+    var tipTop = e ? e.clientY - tooltip.offsetHeight - 12 : rect.top - tooltip.offsetHeight - 6;
+    if (tipTop < 4) tipTop = (e ? e.clientY : rect.bottom) + 12;
     if (tipLeft + tooltip.offsetWidth > window.innerWidth - 8) {
       tipLeft = window.innerWidth - tooltip.offsetWidth - 8;
     }
     if (tipLeft < 4) tipLeft = 4;
+    if (tipTop + tooltip.offsetHeight > window.innerHeight - 8) {
+      tipTop = window.innerHeight - tooltip.offsetHeight - 8;
+    }
 
     tooltip.style.left = tipLeft + 'px';
     tooltip.style.top = tipTop + 'px';
@@ -1352,6 +1374,15 @@
     var g = parseInt(hex.slice(3, 5), 16);
     var b = parseInt(hex.slice(5, 7), 16);
     return 'rgba(' + r + ',' + g + ',' + b + ',' + alpha + ')';
+  }
+
+  function rgbToHex(rgb) {
+    var match = rgb.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+    if (!match) return rgb;
+    var r = parseInt(match[1], 10);
+    var g = parseInt(match[2], 10);
+    var b = parseInt(match[3], 10);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
   // Handle scroll/resize → reposition selection overlays

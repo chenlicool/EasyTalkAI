@@ -1,3 +1,27 @@
+# 2026-05-15 16:21
+时间：2026-05-15 16:21
+目标：Tooltip 多行布局 + 光标跟随定位
+改动：
+  - content.css: es-row-styles 改为 flex-direction:column + 新增 es-subrow 行内 flex
+  - content.js: tooltip 样式区拆为 4 行子区块（P/M → W/H/R → B → 颜色+字体），updateHighlight 接收 event 参数，tooltip 定位改为跟随鼠标光标而非元素左上角，底部出界时 clamped 在视口内
+当前：EasyTalk AI v1.0.3，Tooltip 多行分区显示且不跑出屏幕
+禁止动：无
+待办：无
+回滚：无
+约束：ES5 / 向内兼容
+
+# 2026-05-15 15:51
+时间：2026-05-15 15:51
+目标：Tooltip 增强 — 颜色色值 + W/H/R 标签
+改动：
+  - content.js: 新增 rgbToHex() helper（rgb → #hex），tooltip 第二行文字色/背景色块后追加 hex 色值
+  - content.js: updateHighlight 新增 W（宽）H（高）标签显示元素像素尺寸 + R（圆角）标签（有圆角时才显示）
+当前：EasyTalk AI v1.0.3，Tooltip 显示完整颜色色值和尺寸信息
+禁止动：无
+待办：无
+回滚：无
+约束：ES5 / 向内兼容
+
 # 2026-05-15 10:36
 时间：2026-05-15 10:36
 目标：Box Model Style Inspector — hover 时可视化展示元素样式属性和盒模型
